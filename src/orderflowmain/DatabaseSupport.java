@@ -80,25 +80,27 @@ public class DatabaseSupport {
         //executeQuery function.
         //INPUTS: String: a query written exactly as it should be.
         //OUTPUTS: Boolean: if the query was successfully executed or not.
+        //         Integer: the number of rows in the resulting set.
         //         ResultSet: the set that the query returned.
-    public Pair<Boolean,ResultSet> executeQuery(String queryString){
+    public Pair<Boolean,Pair<Integer,ResultSet>> executeQuery(String queryString){
         Connection executeQueryConn = null;
 //        Pair<Boolean,ResultSet> resultPair = new Pair(false,null);
         ResultSet executeQueryResult;
+        Integer numRows;
         try{
             executeQueryConn = getConnection();
             if (this.connectionStatus(executeQueryConn)==true) {
                 Statement stmt = executeQueryConn.createStatement();
+                numRows= stmt.executeUpdate(queryString);
                 executeQueryResult =  stmt.executeQuery(queryString);
-                return new Pair<Boolean, ResultSet>(true,executeQueryResult);
+                return new Pair<Boolean, Pair<Integer, ResultSet>>(true, new Pair<Integer, ResultSet>(numRows, executeQueryResult));
             }else{
-                return new Pair<Boolean, ResultSet>(false,null);
+                return new Pair<Boolean, Pair<Integer, ResultSet>>(false, new Pair<Integer, ResultSet>(0, null));
             }
         }catch(SQLException sqlExcept){
             System.out.println("getConnection() failed. Database error.");
-            return new Pair<Boolean, ResultSet>(false,null);
+            return new Pair<Boolean, Pair<Integer, ResultSet>>(false, new Pair<Integer, ResultSet>(0, null));
         }
-//        return new Pair<Boolean, ResultSet>(false,null);
     }
     
     public Boolean uploadRecordObject(OrderRecordClass record){
