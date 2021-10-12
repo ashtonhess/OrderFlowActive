@@ -32,7 +32,7 @@ public class OrderFlowScreen3Model extends AbstractPropertyChangeSupport {
     
     
     public void orderFlowScreen3ModelReset(){
-        
+        System.out.println("Resetting OrderFlowScreen3Model.");
         
         
     }

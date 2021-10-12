@@ -5,6 +5,8 @@
  */
 package orderflowmain;
 
+import javafx.util.Pair;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,7 +21,7 @@ import java.util.logging.Logger;
  * @author ashtonhess
  */
 
-//as of right now all of this needs to be tested... 9-16-21
+//as of right now all of this needs to be tested... 10-12-21
 public class DatabaseSupport {
     
     public String databaseURL = "jdbc:mysql://localhost:3306/bOrderFlow";
@@ -73,6 +75,30 @@ public class DatabaseSupport {
             System.out.println("Error closing database connection.");
             Logger.getLogger(AbstractDatabaseSupport.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+        //executeQuery function.
+        //INPUTS: String: a query written exactly as it should be.
+        //OUTPUTS: Boolean: if the query was successfully executed or not.
+        //         ResultSet: the set that the query returned.
+    public Pair<Boolean,ResultSet> executeQuery(String queryString){
+        Connection executeQueryConn = null;
+//        Pair<Boolean,ResultSet> resultPair = new Pair(false,null);
+        ResultSet executeQueryResult;
+        try{
+            executeQueryConn = getConnection();
+            if (this.connectionStatus(executeQueryConn)==true) {
+                Statement stmt = executeQueryConn.createStatement();
+                executeQueryResult =  stmt.executeQuery(queryString);
+                return new Pair<Boolean, ResultSet>(true,executeQueryResult);
+            }else{
+                return new Pair<Boolean, ResultSet>(false,null);
+            }
+        }catch(SQLException sqlExcept){
+            System.out.println("getConnection() failed. Database error.");
+            return new Pair<Boolean, ResultSet>(false,null);
+        }
+//        return new Pair<Boolean, ResultSet>(false,null);
     }
     
     public Boolean uploadRecordObject(OrderRecordClass record){
