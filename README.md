@@ -1,4 +1,4 @@
 # OrderFlowActive
 OrderFlowJDK8 on IntelliJ.
 
-Ashton Hess
+Copyright Ashton Hess 2021
